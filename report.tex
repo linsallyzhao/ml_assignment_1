@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,a3paper]{geometry}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,a3paper]{geometry}
 \usepackage{pgfplots}
 \usepackage{parskip}
 \usepackage{caption}
@@ -337,35 +337,24 @@ of sample AUC do not drop to 0.5 even in the obviously over fitting
 zone.
 
 To answer the first question, one need to identify the souce of
-randomness. After studying of the document of
-the sklearn, I found two protential sources for tree and three for
-forest. One obvious candidate is the random start point when searching
+randomness. I found two protential sources for tree and three for
+forest by reading the document. One obvious candidate is the random start point when searching
 for the optimal arguments to minimize cost function. However, as long as
-the problem is convex, the searching reslults should still be with in a
-relatively small intervel with difference might due to limited resolution. This
-doesn't match the jumps I observed. An argument
+the problem is convex, the searching reslults should be with in a
+relatively small intervel with possible difference due to limited resolution. This
+doesn't match the observation. An argument
 called max\_features in tree is defined as``The number of features to consider when
 looking for the best split(sklearn.tree.DecisionTreeClassifier document
 page)''. When fitted with two variables, the model with max
-feature setted to 1 shows jumps among fittings with exactly same
-parameters while model with max features setted to 2 does not. For the forest, there is one extra
+feature setted to 1 shows jumps while model with max features setted to 2 does not. For the forest, there is one extra
 source of randomness. To grow multiple trees, the sklearn library
-bootstrap observations using random selection with replacement. To test
-this conclusion, I fit the model with same dataset multiple times and
-found that the jumps only disappare when you lift up limitation on max
-fearture and turn off bootstrap. In both tree and forest sklean
+bootstrap observations using random selection with replacement. In both tree and forest sklean
 function, the argument random state controls all the
 randomness.
 
 Carrying knowledge mentioned above, I try to decompose the fluctuations.
-First, fixing random state eliminates fluctuation in
-AUC-max-depth plot of trees in the tail part which means all the fluctuations are
-caused by randomness. Next, I generate the AUC-max-depth plot with no
-limit on max feature, and observed that the shape of the over fitting
-part changed but the amplitudes of AUC are not obvious reduced. This
-indicate that the limit on max feature is not the main source of
-observed fluctuation and there are other usage of randomness in the
-model fitting that are unknown. For the forest, I first turn off the max
+Fixing random state eliminates fluctuation in
+AUC-max-depth plot of both treee and forests. For the forest, I first turn off the max
 feature limit, and the resulting plot doesn't show less fluctuation.
 Next, I add the limit on max feature and turn off bootstrap, and
 this reduced the fluctuation. And eventually, when I turn off both limit
@@ -400,7 +389,12 @@ ramdom state argument was fixed when fit these models.
 \subsection*{Another criteria}
 
 Except for AUC, confusion matrix is also a good criteria for model
-comparison. In one out-of-sample test, to capture 10\% of the crisis,
+comparison. In the tables below, I collected full out-of-sample results for logistic
+regression and forest fitted with 70\% of whole data set regarding confusion matrix. False alarm is defined as
+M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
+miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
+
+To capture 10\% of the crisis,
 logistic regression need to flag 2\% of the total observation, and 80\%
 of those flags are false alarm. On the other hand, forest need only flag
 less than 1\% of data and only half of those are false alarm. However,
@@ -410,13 +404,11 @@ need to flag half of the data point and more than 90\% of the flag are
 false alarm. The main idea here is that there is no sigle best criteria
 and the criteria selection should be based on the goal of analysis.
 
-In the tables below, I collected full out-of-sample results for logistic
-regression and forest fitted with 70\% of whole data set regarding confusion matrix. False alarm is defined as
-M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
-miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
-
 \begin{table}[H]
-    \parbox{.45\linewidth}{
+        \caption{Out-of-sample performance for logistic regression based on confusion matrix.
+        Logistic regression fitted with 70\% of the whole period and
+        tested with 30\% of whole period. Explanory variable is lag 2
+        credit change only. AUC is 0.73709.}
         \begin{tabular}{|l|l|l|l|}
         \hline
          threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
@@ -440,30 +432,25 @@ miss classified. Total flag is the percentage of total observation that has been
         0.95759 & 0.94737  & 0.94098  & 0.71096    \\ \hline
         0.95745 & 1.00000                 & 0.95000               & 0.88578   \\ \hline
         \end{tabular}
-        \caption{Out-of-sample performance for logistic regression based on confusion matrix.
-        Logistic regression fitted with 70\% of the whole period and
-        tested with 30\% of whole period. Explanory variable is lag 2
-        credit change only. AUC is 0.73709.}
-    }
-    \hfill
-    \parbox{.45\linewidth}{
-        \begin{tabular}{|l|l|l|l|}
-        \hline
-         threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
-        0.31088  & 0.05263 & 0.00000                & 0.00233 \\ \hline
-        0.15587  & 0.10526 & 0.50000                & 0.00932 \\ \hline
-        0.05381   & 0.15789 & 0.90909 & 0.07692  \\ \hline
-        0.04785 & 0.36842  & 0.89394 & 0.15385  \\ \hline
-        0.04160  & 0.73684  & 0.93665 & 0.51515   \\ \hline
-        0.03808  & 0.84211  & 0.93822 & 0.60373   \\ \hline
-        0.03177  & 0.89474  & 0.93885 & 0.64802   \\ \hline
-        0.01070 & 0.94737  & 0.95000               & 0.83916   \\ \hline
-        0.00829  & 1.00000                 & 0.95571 & 1.00000                  \\ \hline
-        \end{tabular}
+\end{table}
+\begin{table}[H]
         \caption{Out-of-sample performance for forest based on confusion matrix. Forest fitted with 70\% of the whole period and tested on
         30\% of the whole period. Variable is lag 2 credit change only,
         max depth is 3. The AUC of this model is 0.67079.}
-    }
+
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+     threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+    0.31088  & 0.05263 & 0.00000                & 0.00233 \\ \hline
+    0.15587  & 0.10526 & 0.50000                & 0.00932 \\ \hline
+    0.05381   & 0.15789 & 0.90909 & 0.07692  \\ \hline
+    0.04785 & 0.36842  & 0.89394 & 0.15385  \\ \hline
+    0.04160  & 0.73684  & 0.93665 & 0.51515   \\ \hline
+    0.03808  & 0.84211  & 0.93822 & 0.60373   \\ \hline
+    0.03177  & 0.89474  & 0.93885 & 0.64802   \\ \hline
+    0.01070 & 0.94737  & 0.95000               & 0.83916   \\ \hline
+    0.00829  & 1.00000                 & 0.95571 & 1.00000                  \\ \hline
+    \end{tabular}
 \end{table}
 
 \subsection*{Conclusion and potential further questions to answer}
@@ -471,13 +458,11 @@ miss classified. Total flag is the percentage of total observation that has been
 In this study, I implemented
 a few supervised learning models on the data. The major predicting
 power lies in lag 2 credit change and this conclusion alines with
-Schularick and Taylor paper. In respect of supervised models, their
-power are much stronger in sample. This confirms the result of Fricke
-paper. Among the models I fitted, tree and forest are particularly
+Schularick and Taylor paper. Prediction power of models are much stronger in sample. This confirms the result of Fricke
+paper. Tree and forest are particularly
 vulnarable to over fitting thus require carefully picked parameters like
 maxmum depth or maxmum number of leaves. They are also quite sensitive
-to the change of training set. This is explored by truning on and off
-the bootstrap on observations when training forest. Another issue for
+to the change of training set. Another issue for
 tree and forest is that when there is a dominating class in the training
 data, there model generated could be biasd. This issue can be reduced by
 balance the data prior fitting or assign similar weight to different
@@ -486,7 +471,7 @@ interesting topic for futher study. Since forest shows great protential
 to predict crisis, and machine learning methods are not widly use in
 economical research, solving this issue may have practical meaning. All
 the models tested in this report show some level of predicting power.
-However, there is no sigle standard to judge which is the best model.
+However, there is no single standard to judge which is the best model.
 The selecting criteria strongly depends on the purpose of the analysis
 and different models may have adventages in different tasks.
 
