@@ -32,22 +32,22 @@ The dataset used for this task is from Schularick and Taylor(2012,
 ``Credit Booms Gone Bust''). It is an annual dataset covering 14
 countries and 140 years. Among the variables they collected, the most
 important one is the yearly aggregate bank loans, which is 
-the main soure of prediction power. The variable of interest is the
+the main soure of predictive power. The variable of interest is the
 CrisisST which take a value of 1 when there is a financial crisis and 0
 otherwise.
 
 Following the guidance of Schularick and Talor(2012), I explored the
 relationships between several macro variables within two
-eras of finance capitalism, tested the predicting power of different
-macro variables, and compared predicting power of different supervised
+eras of finance capitalism, tested the predictive power of different
+macro variables, and compared predictive power of different supervised
 learning methods. The last part of above is also inspired by the
 Fricke(2017, Financial Crisis Prediction: A Model Comparison``). 
 
-The methods used in this part are logistic regression, classification
+The methods used are logistic regression, classification
 tree, classification forest, and SVM. The major criteria
 used here is area under receiver operating curve. The secondary creteria
 is confusion matrix. The major validation method is the modified cross
-validation method mentioned in the Fricke paper that take time into
+validation method  as mentioned in the Fricke paper that takes time order into
 consideration.
 
 \subsection*{Data description and cleaning}
@@ -69,33 +69,37 @@ to take off after the distruction of WW2 implying that credit start to
 grow faster than broad money supply and no steady relationship between
 the too can be found in this period.
 
-\ciapdf{Figure_1.pdf}
-
 \ciapdf{Figure_2.pdf}
 
-To study financial crisis caused by the economy system, we need to
-exclude the crisis caused by the two world war. As did in Schularick and
-Taylor paper, I excluded the war period(1914 to 1919 and 1939 to 1947)
+\begin{quote}
+Figure 1: Aggregates relative to GDP (year effects)
+\end{quote}
+
+\ciapdf{Figure_1.pdf}
+
+\begin{quote}
+Figure 2: Aggregates relative to broad money (year effects)
+\end{quote}
+
+To study financial crisis caused by the internal reasons from economic system,
+we need to
+exclude the crisis caused by the two world wars. As did in Schularick and
+Taylor paper, I excluded the war periods (1914 to 1919 and 1939 to 1947)
 and German crisis after WW1(1920 to 1925). Divided the cleaned up
-dataset into pre- and post-war period, I recovered the upper panel of
+dataset into pre- and post-war periods, I recovered the upper panel of
 table 1 in the paper.
 
-\subsection*{Annual summary statistics pre- and post-war}
+\subsubsection*{Annual summary statistics pre- and post-war}
 
 \begin{table}[H]
     \begin{center}\begin{tabular}{|l|l|l|l|l|l|}
     \hline
           & credit\_to\_GDP & bankAsset\_to\_GDP & money\_to\_GDP & credit\_to\_money & bank\_asset\_to\_money \\ \hline
+          & Pre-war         &                    &                &                   &                        \\ \hline
     count & 685             & 611                & 736            & 662               & 580                    \\ \hline
     mean  & 0.408977        & 0.714051           & 0.533292       & 0.735337          & 1.282481               \\ \hline
     std   & 0.359888        & 0.447337           & 0.207534       & 0.449343          & 0.566104               \\ \hline
-    \end{tabular}\end{center}
-\end{table}
-
-\begin{table}[H]
-    \begin{center}\begin{tabular}{|l|l|l|l|l|l|}
-    \hline
-          & credit\_to\_GDP & bankAsset\_to\_GDP & money\_to\_GDP & credit\_to\_money & bank\_asset\_to\_money \\ \hline
+          & Post-war        &                    &                &                   &                        \\ \hline
     count & 831             & 828                & 834            & 833               & 831                    \\ \hline
     mean  & 0.546975        & 1.013497           & 0.645801       & 0.838012          & 1.575839               \\ \hline
     std   & 0.423878        & 0.668770           & 0.240497       & 0.494226          & 0.752540               \\ \hline
@@ -105,43 +109,59 @@ table 1 in the paper.
 More than half of the countries in the dataset are from
 Europe, so I also excluded all the observations in post WW1 period(1920 to
 1925) since all the crises happened in
-that period could be caused by WW1 rather than economical system. I also
-dropped any row that contains missing value. I
-only kept the variables that have protentially strong prediction power
+that period could be caused by WW1 rather than economic system. I
+only kept the variables that have protentially strong predictive power
 according to the results and the robustness test from the paper.
 
-After cleaning, I have 1433 observations and 59 out of these are crisis
+After dropping any row that contains missing value, I have 1433 observations
+and 59 out of these are crisis
 events.
 
 \subsection*{Supervised learning methods for classification}
 
 \subsubsection*{Logistic regression and choice of explanatory variables}
 
-As defined in Schularick and Taylor paper, I created cpi nomalized bank
-loan and take the difference of log value of this variable as the change
+As defined in Schularick and Taylor paper, I created CPI nomalized bank
+loan and take the difference of log values of this variable as the change
 of credit environment. This variable will be called credit change. I also
 take credit to GDP ratio as one protential
 explanatory variable base on robustness test of the paper. This variable
 lagged 1 year will be called credit size. After
-assign each country for each year its lagged 1 to 5 credit change, I
+assign each country for each year its lagged 1 to 5 credit change and credit size, I
 sorted the dataset by time to make sure that when fitting a model, it is
 not trying to predict 1960s crisis with 1990s' data.
 
-I started the analysis by useing lag 1 to lag 5 diff-log credit to fit a
+I started the analysis by useing lag 1 to lag 5 credit change to fit a
 logistic regression model. The AUC is slightly higher than 0.5 for the whole
 dataset and for the pre-war dataset, and significantly higher than 0.5
-for the post-war dataset. Since in the paper, lag 2 credit change is the only lagged variable that
+for the post-war dataset. Since in the paper, lag 2 credit change is the only
+lagged variable that
 is significant, I also fitted logistic regression with only lag 2 data
 and the model fit slightly better for both whole set and pre-war period
 in respect of AUC. The change in post-war period is umbiguous and 
-credit size seems add prediction power to the post-war period. The lag 2 credit change is indeed the
+credit size seems add predictive power to the post-war period. The lag 2 credit
+change is indeed the
 main sourece of information.
+
+\subsubsection*{In-sample AUC for logistic regression with lag 1 to 5 credit change}
+
+\begin{table}[H]
+    \caption{in-sample logistic regression trained with whole time period,
+    pre-war period and post-war period with lag 1 to 5 credit change as major
+    explanatory variable.}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
+    \hline
+                        & whole set          & pre-war            & post-war           \\ \hline
+    without credit size & 0.5861360718870345 & 0.5762987012987013 & 0.7608543417366948 \\ \hline
+    with credit size    & 0.5892169448010269 & 0.5892169448010269 & 0.615546218487395 \\ \hline
+    \end{tabular}\end{center}
+\end{table}
 
 \subsubsection*{In-sample AUC for logistic regression with lag 2 credit change}
 
 \begin{table}[H]
-    \caption{in-sample logistic regression trained with wholde time period,
-    pre-war period and post war period with lag 2 credit change as major
+    \caption{in-sample logistic regression trained with whole time period,
+    pre-war period and post-war period with lag 2 credit change as major
     explanatory variable.}
     \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
@@ -153,7 +173,7 @@ main sourece of information.
 
 I did a out-of-sample test for the choice of variable using
 30\% of the dataset as test set and 70\% as training set.
-The result show that model fitted with lag 2 credit change have
+The results show that model fitted with lag 2 credit change have
 significantly better out-of-sample performance than model fitted with
 lag 1 to lag 5 and credit size doesn't seem to add predicting
 power to the model. The AUC are reported in the following tables.
@@ -176,9 +196,8 @@ power to the model. The AUC are reported in the following tables.
 \subsubsection*{Out-of-sample AUC for logistic regression with lag 2 credit change}
 
 \begin{table}[H]
-    \caption{
-    table 5: out-of-sample logistic regression trained with 70% of
-    each data set and tested on 30% of data with lag 2 credit change
+    \caption{out-of-sample logistic regression trained with 70\% of
+    each data set and tested on 30\% of data with lag 2 credit change
     as major explanatory variable.
     }
     \begin{center}\begin{tabular}{|l|l|l|l|}
@@ -191,16 +210,17 @@ power to the model. The AUC are reported in the following tables.
 
 \ciapdf{Figure_4.pdf}
 \begin{quote}
-Figure 4: out-of-sample AUC of logistic model fitted with 70% of
-data as training set and 30% as testing set. All three period
+Figure 3: out-of-sample AUC of logistic fitted with 70\% of
+data as training set and 30\% as testing set. All three periods
 fitted with lag 2 credit change only.
 \end{quote}
 
 Given result above, I only considered lag 2 credit change and credit
-size variable. This also means all the model compared here will have
+size variables in the rest of this study. This also means all the models
+compared here will have
 same information as input and thus makes the comparison meaningful.
 
-At last for logistic regression, I did a modified cross validation
+At last for logistic regression, I did a modified cross validation as
 mentioned in the Fricke paper. I divided the wholde dataset in to four
 equal folds. First, I use fold one to train and test on fold two. Then I
 use fold one and two to train and test on fold three, etc.. The average
@@ -209,14 +229,14 @@ dataset into 4 rather than 5 fold like did in the Fricke paper is that
 when the fold is too small, due to the sparseness of crisis events,
 there might be only one class in the whole training set or test set.
 
-\subsection*{Tree and forest}
+\subsubsection*{Tree and forest}
 
 Next I fitted the data with a classification tree. With maxmum depth
 equals to 3, here are result of in-sample prediction. It is obvious from
-the table that credit size add on predicting power for classification
+the table that credit size add on predictive power for classification
 tree at least for in-sample test.
 
-\subsection*{AUC for classification tree}
+\subsubsection*{AUC for classification tree}
 
 \begin{table}[H]
     \caption{
@@ -234,12 +254,12 @@ tree at least for in-sample test.
 From the AUC plot we can see that there are much less point on each line
 for the tree compared with logistic regression. This is because for
 logistic regression, each observation will have its own estimated
-probability, but for a tree, the observation belong to the same leaf
+probability, but for a tree, the observations belong to the same leaf
 will have the same probability.
 
 \ciapdf{Figure_5.pdf}
 \begin{quote}
-Figure 5: AUC of classification tree fitted with whole time period,
+Figure 4: AUC of classification tree fitted with whole time period,
 pre-war and post-war period. All three period fitted with lag 2 credit
 change and credit size.
 \end{quote}
@@ -257,7 +277,7 @@ depth that coincide with the highest AUC.
 
 \ciapdf{Figure_6.pdf}
 \begin{quote}
-Figure 6: Average AUC for the whole, pre- and post-war dataset fitted
+Figure 5: Average AUC for the whole, pre- and post-war dataset fitted
 with and without credit size plot against maxmum depth
 \end{quote}
 
@@ -267,7 +287,7 @@ change and credit size. With 30\% of the total data as a test set, these models 
 0.69021 and 0.43697 respectlly.
 
 The dramatically different performance between in-sample and
-out-of-sample test is caused by over fitting. Given a high enough
+out-of-sample test is expected and indecates over fitting. Given a high enough
 max-depth, classification tree can acheive AUC 1.0 in an in-sample test.
 But over fitting will lead to very poor out-of-sample prediction. This
 is indicated by the flatening out in the figure above. Two trees with different maxmum depth in the appendex demonstrate
@@ -275,10 +295,10 @@ this point.
 
 With exactly same idea, I performed analysis with classification forest
 model. The in-sample performance is better than the tree with same
-max-depth which could either caused by higher predicting power or
-overfitting.
+max-depth which in general indicate higher predictive power. However, forest is also
+vulnerable to overfitting.
 
-\subsection*{AUC for classification forest}
+\subsubsection*{AUC for classification forest}
 
 
 \begin{table}[H]
@@ -294,7 +314,7 @@ overfitting.
 
 \ciapdf{Figure_7.pdf}
 \begin{quote}
-Figure 7: AUC of classification forest fitted with whole time period,
+Figure 6: AUC of classification forest fitted with whole time period,
 pre-war and post-war period. First two period fitted with lag 2 credit
 change and credit size and post-war fitted with lag 2 credit change
 only.
@@ -306,13 +326,15 @@ size. Tested with 30\% data in the dataset, the AUC are 0.62426,
 0.73593, and 0.71709 for whole, pre-war and post-war data.
 
 Tree and forest learners perform brilliantly in-sample and
-are not much more impresive than logistic regression in out-of-sample test. Forest
-perform slightly better than tree method.
+are not much more impresive than logistic regression in out-of-sample test. Due
+to the adventage of averaging multiple trees, and reduce overfitting and
+variance, forest
+performs slightly better than tree method.
 
 In both tree and forest analysis, I used gini index and entropy and
 there are little difference between the AUC.
 
-\subsection*{SVM}
+\subsubsection*{SVM}
 
 When fitting SVM model with the data, I used two kinds of kernels:
 rbf(Gaussion kernel) and sigmoid kernel. The results are both affected
@@ -323,15 +345,16 @@ better out of sample perfomance.
 \subsection*{A few interesting facts and potential explanations}
 
 
-When taking a closer look to the results of tree and forest, I found a
+When taking a closer look at the results of tree and forest, I found a
 few interesting facts. First, for both tree and forest, I found the
 results are different when fitting models with exactly same data set and
 parameters, indecating randomness in the
 fitting precesure. Second, for the
-model fitted with both lag 2 credit change and credit size, the average
-AUC show fluctuation in the over fitting tail. In the plot of forest,
-all model show fluctuation in the over fitting tail parts but for models
-with two explanatory variables, the fluctuations have higher amplitude.
+models fitted with both lag 2 credit change and credit size, the average
+AUC show fluctuation in the over fitting zone when plotted with maxmum depth.
+In the plot of forest,
+all models show fluctuation in the over fitting parts but for models
+with two explanatory variables, the fluctuations have higher amplitudes.
 Last, for some trees and forests, the out
 of sample AUC do not drop to 0.5 even in the obviously over fitting
 zone.
@@ -348,8 +371,8 @@ looking for the best split(sklearn.tree.DecisionTreeClassifier document
 page)''. When fitted with two variables, the model with max
 feature setted to 1 shows jumps while model with max features setted to 2 does not. For the forest, there is one extra
 source of randomness. To grow multiple trees, the sklearn library
-bootstrap observations using random selection with replacement. In both tree and forest sklean
-function, the argument random state controls all the
+bootstrap observations using random selection with replacement. In both tree
+and forest functions from sklearn library, the argument random state controls all the
 randomness.
 
 Carrying knowledge mentioned above, I try to decompose the fluctuations.
@@ -367,32 +390,34 @@ explanatory variables dropped below 0.5 benchmark after the limit and
 bootstrap was turn off. I cannot explain this change. Relavent plots are in the appendix.
 
 I notice that the model that has
-prediction power even when over fitted are models fitted with the whole
+predictive power even when over fitted are models fitted with the whole
 dataset. This is ture for both tree and forest analysis(with
 randomness turn off in forest). From the plot of AUC of trees fitted
 with different datasets, I notice that there is only one point in each
 of the three line. This indecates that in the out of sample test, only
-the first split take effect, most likely due to
+one split, presumably the first split take effect, most likely due to
 over fitting. The whole set has the largest number of observations, it is likely that
-even when over fitted, the first split has some predicting power. Here
+even when over fitted, the first split still has some predictive power. Here
 is one exampel of AUC plot when over fitted. This also explains the same
 observation in the forest analysis.
 
 \ciapdf{Figure_11.pdf}
 \begin{quote}
-Figure 11: All three models are fitted with lag 2 credit change and
-credit size. These models are fitted with 80% of dataset and
-tested on 20% of set. To eliminate effect of randomness, the
+Figure 7: All three models are fitted with lag 2 credit change and
+credit size. These models are fitted with 80\% of dataset and
+tested on 20\% of set. To eliminate effect of randomness, the
 ramdom state argument was fixed when fit these models.
 \end{quote}
 
 \subsection*{Another criteria}
 
-Except for AUC, confusion matrix is also a good criteria for model
-comparison. In the tables below, I collected full out-of-sample results for logistic
-regression and forest fitted with 70\% of whole data set regarding confusion matrix. False alarm is defined as
-M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
-miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
+Except for AUC, a few other values from confusion matrix can also be good
+criterias for model comparison. In the tables below, I collected some 
+out-of-sample results for logistic regression and forest fitted with 70\%
+of whole data set regarding confusion matrix. False alarm is defined as
+M01 / (M01 + M11), and can be interpreted as when model say crisis, how much
+of that are miss classified. Total flag is the percentage of total
+observation that has been flagged by the model as crisis.
 
 To capture 10\% of the crisis,
 logistic regression need to flag 2\% of the total observation, and 80\%
@@ -461,19 +486,19 @@ and the criteria selection should be based on the goal of analysis.
 In this study, I implemented
 a few supervised learning models on the data. The major predicting
 power lies in lag 2 credit change and this conclusion alines with
-Schularick and Taylor paper. Prediction power of models are much stronger in sample. This confirms the result of Fricke
+Schularick and Taylor paper. Predictive power of models are much stronger in sample. This confirms the result of Fricke
 paper. Tree and forest are particularly
 vulnarable to over fitting thus require carefully picked parameters like
 maxmum depth or maxmum number of leaves. They are also quite sensitive
 to the change of training set. Another issue for
 tree and forest is that when there is a dominating class in the training
-data, there model generated could be biasd. This issue can be reduced by
+data, the model generated could be biasd. This issue can be reduced by
 balance the data prior fitting or assign similar weight to different
 classes. However, these are not explored in this report and can be
 interesting topic for futher study. Since forest shows great protential
 to predict crisis, and machine learning methods are not widly use in
-economical research, solving this issue may have practical meaning. All
-the models tested in this report show some level of predicting power.
+economic research, solving this issue could have practical meaning. All
+the models tested in this report show some level of predictive power.
 However, there is no single standard to judge which is the best model.
 The selecting criteria strongly depends on the purpose of the analysis
 and different models may have adventages in different tasks.
@@ -490,16 +515,17 @@ Daniel Fricke
 
 \section*{Appendix}
 
-Figure 1: nomal depth tree
+Figure 8: nomal depth tree
 
 \ciapdf{app_normaldepth.pdf}
 
-Figure 2: over fitting tree 
+Figure 9: over fitting tree 
 
 \vspace*{-\parskip}\resizebox{\textwidth}{!}{\includegraphics{app_overfitting.pdf}}
 
-Figure 3:
-different trees generated by same data with limited max feature
+Figure 10:
+different trees generated by same data with limited max feature. We can see
+there is a tie in the cost function values.
 
 \ciapdf{app_samedata_1.pdf}
 
@@ -507,20 +533,20 @@ different trees generated by same data with limited max feature
 
 \ciapdf{Figure_8.pdf}
 \begin{quote}
-Figure 8: The maxmum feature is limited and bootstrap is on, this is
+Figure 11: The maxmum feature is limited and bootstrap is on, this is
 exactly the same plot used to choose optimal depth. We can see a lot of
-fluctuation here at least three AUC do not approach 0.5 benchmark.
+fluctuation here and at least three AUC do not approach 0.5 benchmark.
 \end{quote}
 
 \ciapdf{Figure_9.pdf}
 \begin{quote}
-Figure 9: The maxmum feature is limited and bootstrap is off, and we can
+Figure 12: The maxmum feature is limited and bootstrap is off, and we can
 see that fluctuation is reduced.
 \end{quote}
 
 \ciapdf{Figure_10.pdf}
 \begin{quote}
-Figure 10: The maxmum feature is unlimited and bootstrap is off, and we
+Figure 13: The maxmum feature is unlimited and bootstrap is off, and we
 can see dramatical reduce of fluctuation and only two lines do not
 approach 0.5 benchmark.
 \end{quote}
