@@ -4,6 +4,7 @@
 \usepackage{parskip}
 \usepackage{caption}
 \usepackage{multicol}
+\usepackage{wrapfig}
 
 \usepackage{float}
 \restylefloat{table}
@@ -414,58 +415,55 @@ regression and forest fitted with 70\% of whole data set regarding confusion mat
 M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
 miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
 
-\subsection*{Out-of-sample performance for logistic regression based on confusion matrix}
-
 \begin{table}[H]
-    \caption{
-    Logistic regression fitted with 70% of the whole period and
-    tested with 30% of whole period. Explanory variable is lag 2
-    credit change only. AUC is 0.73709.}
-    \begin{tabular}{|l|l|l|l|}
-    \hline
-     threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
-    0.9584492738912054 & 0.05263157894736842 & 0.875              & 0.018648018648018648 \\ \hline
-    0.9584156227543202 & 0.10526315789473684 & 0.8                & 0.023310023310023312 \\ \hline
-    0.9582944101957735 & 0.15789473684210525 & 0.8                & 0.03496503496503497  \\ \hline
-    0.9581720526209747 & 0.21052631578947367 & 0.84               & 0.05827505827505827  \\ \hline
-    0.9581434201492378 & 0.2631578947368421  & 0.8333333333333334 & 0.06993006993006994  \\ \hline
-    0.9580476223194564 & 0.3157894736842105  & 0.8604651162790697 & 0.10023310023310024  \\ \hline
-    0.9580060539159138 & 0.3684210526315789  & 0.86               & 0.11655011655011654  \\ \hline
-    0.9579924986498776 & 0.42105263157894735 & 0.8518518518518519 & 0.1258741258741259   \\ \hline
-    0.9579584325457295 & 0.47368421052631576 & 0.8571428571428571 & 0.14685314685314685  \\ \hline
-    0.9579263005580301 & 0.5263157894736842  & 0.8717948717948718 & 0.18181818181818182  \\ \hline
-    0.9579072932281031 & 0.5789473684210527  & 0.8817204301075269 & 0.21678321678321677  \\ \hline
-    0.9578986698802621 & 0.631578947368421   & 0.8811881188118812 & 0.23543123543123542  \\ \hline
-    0.9578854148873172 & 0.6842105263157895  & 0.8828828828828829 & 0.25874125874125875  \\ \hline
-    0.9578553847205481 & 0.7368421052631579  & 0.8931297709923665 & 0.30536130536130535  \\ \hline
-    0.9577269139408369 & 0.7894736842105263  & 0.9282296650717703 & 0.48717948717948717  \\ \hline
-    0.9576669020322022 & 0.8421052631578947  & 0.937007874015748  & 0.5920745920745921   \\ \hline
-    0.95763518803743   & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
-    0.9575910472738063 & 0.9473684210526315  & 0.940983606557377  & 0.710955710955711    \\ \hline
-    0.9574512307806254 & 1.0                 & 0.95               & 0.8857808857808858   \\ \hline
-    \end{tabular}
-\end{table}
-
-
-\subsection*{Out-of-sample performance for forest based on confusion matrix}
-
-\begin{table}[H]
-    \caption{Forest fitted with 70\% of the whole period and tested on
-    30\% of the whole period. Variable is lag 2 credit change only,
-    max depth is 3. The AUC of this model is 0.67079.}
-    \begin{tabular}{|l|l|l|l|}
-    \hline
-     threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
-    0.31087996870780027  & 0.05263157894736842 & 0.0                & 0.002331002331002331 \\ \hline
-    0.15586808878177918  & 0.10526315789473684 & 0.5                & 0.009324009324009324 \\ \hline
-    0.0538083675328781   & 0.15789473684210525 & 0.9090909090909091 & 0.07692307692307693  \\ \hline
-    0.047849724485387976 & 0.3684210526315789  & 0.8939393939393939 & 0.15384615384615385  \\ \hline
-    0.04160062144965254  & 0.7368421052631579  & 0.9366515837104072 & 0.5151515151515151   \\ \hline
-    0.03808155845225508  & 0.8421052631578947  & 0.9382239382239382 & 0.6037296037296037   \\ \hline
-    0.03176986812156413  & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
-    0.010696363086234579 & 0.9473684210526315  & 0.95               & 0.8391608391608392   \\ \hline
-    0.00829026056619624  & 1.0                 & 0.9557109557109557 & 1.0                  \\ \hline
-    \end{tabular}
+    \parbox{.45\linewidth}{
+        \begin{tabular}{|l|l|l|l|}
+        \hline
+         threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+        0.95845 & 0.05263 & 0.87500              & 0.01865 \\ \hline
+        0.95842 & 0.10526 & 0.80000                & 0.02331 \\ \hline
+        0.95829 & 0.15789 & 0.80000                & 0.03497  \\ \hline
+        0.95817 & 0.21053 & 0.84000               & 0.05828  \\ \hline
+        0.95814 & 0.26316  & 0.83333 & 0.06993  \\ \hline
+        0.95805 & 0.31579  & 0.86047 & 0.10023  \\ \hline
+        0.95801 & 0.36842  & 0.86000               & 0.11655  \\ \hline
+        0.95799 & 0.42105 & 0.85185 & 0.12587   \\ \hline
+        0.95796 & 0.47368 & 0.85714 & 0.14685  \\ \hline
+        0.95793 & 0.52632  & 0.87179 & 0.18182  \\ \hline
+        0.95791 & 0.57895  & 0.88172 & 0.21678  \\ \hline
+        0.95790 & 0.63158   & 0.88119 & 0.23543  \\ \hline
+        0.95789 & 0.68421  & 0.88288 & 0.25874  \\ \hline
+        0.95786 & 0.73684  & 0.89313 & 0.30536  \\ \hline
+        0.95773 & 0.78947  & 0.92823 & 0.48718  \\ \hline
+        0.95767 & 0.84211  & 0.93701  & 0.59207   \\ \hline
+        0.95764   & 0.89474  & 0.93885 & 0.64802   \\ \hline
+        0.95759 & 0.94737  & 0.94098  & 0.71096    \\ \hline
+        0.95745 & 1.00000                 & 0.95000               & 0.88578   \\ \hline
+        \end{tabular}
+        \caption{Out-of-sample performance for logistic regression based on confusion matrix.
+        Logistic regression fitted with 70\% of the whole period and
+        tested with 30\% of whole period. Explanory variable is lag 2
+        credit change only. AUC is 0.73709.}
+    }
+    \hfill
+    \parbox{.45\linewidth}{
+        \begin{tabular}{|l|l|l|l|}
+        \hline
+         threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+        0.31088  & 0.05263 & 0.00000                & 0.00233 \\ \hline
+        0.15587  & 0.10526 & 0.50000                & 0.00932 \\ \hline
+        0.05381   & 0.15789 & 0.90909 & 0.07692  \\ \hline
+        0.04785 & 0.36842  & 0.89394 & 0.15385  \\ \hline
+        0.04160  & 0.73684  & 0.93665 & 0.51515   \\ \hline
+        0.03808  & 0.84211  & 0.93822 & 0.60373   \\ \hline
+        0.03177  & 0.89474  & 0.93885 & 0.64802   \\ \hline
+        0.01070 & 0.94737  & 0.95000               & 0.83916   \\ \hline
+        0.00829  & 1.00000                 & 0.95571 & 1.00000                  \\ \hline
+        \end{tabular}
+        \caption{Out-of-sample performance for forest based on confusion matrix. Forest fitted with 70\% of the whole period and tested on
+        30\% of the whole period. Variable is lag 2 credit change only,
+        max depth is 3. The AUC of this model is 0.67079.}
+    }
 \end{table}
 
 \subsection*{Conclusion and potential further questions to answer}
