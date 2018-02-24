@@ -89,7 +89,7 @@ and German crisis after WW1(1920 to 1925). Divided the cleaned up
 dataset into pre- and post-war periods, I recovered the upper panel of
 table 1 in the paper.
 
-\subsubsection*{Annual summary statistics pre- and post-war}
+\subsubsection*{\centering{}Annual summary statistics pre- and post-war}
 
 \begin{table}[H]
     \begin{center}\begin{tabular}{|l|l|l|l|l|l|}
@@ -143,21 +143,21 @@ credit size seems add predictive power to the post-war period. The lag 2 credit
 change is indeed the
 main sourece of information.
 
-\subsubsection*{In-sample AUC for logistic regression with lag 1 to 5 credit change}
+\subsubsection*{\centering{}In-sample AUC for logistic regression with lag 1 to 5 credit change}
 
 \begin{table}[H]
-    \caption{in-sample logistic regression trained with whole time period,
-    pre-war period and post-war period with lag 1 to 5 credit change as major
-    explanatory variable.}
     \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.5861360718870345 & 0.5762987012987013 & 0.7608543417366948 \\ \hline
     with credit size    & 0.5892169448010269 & 0.5892169448010269 & 0.615546218487395 \\ \hline
     \end{tabular}\end{center}
+    \caption{in-sample logistic regression trained with whole time period,
+    pre-war period and post-war period with lag 1 to 5 credit change as major
+    explanatory variable.}
 \end{table}
 
-\subsubsection*{In-sample AUC for logistic regression with lag 2 credit change}
+\subsubsection*{\centering{}In-sample AUC for logistic regression with lag 2 credit change}
 
 \begin{table}[H]
     \caption{in-sample logistic regression trained with whole time period,
@@ -178,7 +178,7 @@ significantly better out-of-sample performance than model fitted with
 lag 1 to lag 5 and credit size doesn't seem to add predicting
 power to the model. The AUC are reported in the following tables.
 
-\subsubsection*{Out-of-sample AUC for logistic regression with lag 1 to lag 5 credit change}
+\subsubsection*{\centering{}Out-of-sample AUC for logistic regression with lag 1 to lag 5 credit change}
 
 \begin{table}[H]
     \caption{out-of-sample logistic regression trained with 70\% of
@@ -193,7 +193,7 @@ power to the model. The AUC are reported in the following tables.
 \end{table}
 
 
-\subsubsection*{Out-of-sample AUC for logistic regression with lag 2 credit change}
+\subsubsection*{\centering{}Out-of-sample AUC for logistic regression with lag 2 credit change}
 
 \begin{table}[H]
     \caption{out-of-sample logistic regression trained with 70\% of
@@ -236,7 +236,7 @@ equals to 3, here are result of in-sample prediction. It is obvious from
 the table that credit size add on predictive power for classification
 tree at least for in-sample test.
 
-\subsubsection*{AUC for classification tree}
+\subsubsection*{\centering{}AUC for classification tree}
 
 \begin{table}[H]
     \caption{
@@ -298,7 +298,7 @@ model. The in-sample performance is better than the tree with same
 max-depth which in general indicate higher predictive power. However, forest is also
 vulnerable to overfitting.
 
-\subsubsection*{AUC for classification forest}
+\subsubsection*{\centering{}AUC for classification forest}
 
 
 \begin{table}[H]
