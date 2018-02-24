@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,a3paper]{geometry}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,a3paper]{geometry}
 \usepackage{pgfplots}
 \usepackage{parskip}
 \usepackage{caption}
@@ -13,7 +13,7 @@
 \pgfplotsset{compat=1.15}
 
 \newcommand{\cia}[1]{\resizebox{\textwidth}{!}{\input{#1}}}
-\newcommand{\ciapdf}[1]{\vspace*{-\parskip}\resizebox{0.9\textwidth}{!}{\includegraphics[width=0.9\textwidth]{#1}}}
+\newcommand{\ciapdf}[1]{\vspace*{-\parskip}\resizebox{0.75\textwidth}{!}{\includegraphics[width=0.75\textwidth]{#1}}}
 \newcommand{\halfhalf}[2]{\begin{multicols}{2}\includegraphics[width=0.5\textwidth]{#1} \includegraphics[width=0.5\textwidth]{#2}\end{multicols}}
 
 \begin{document}
@@ -311,6 +311,14 @@ perform slightly better than tree method.
 In both tree and forest analysis, I used gini index and entropy and
 there are little difference between the AUC.
 
+\subsection*{SVM}
+
+When fitting SVM model with the data, I used two kinds of kernels:
+rbf(Gaussion kernel) and sigmoid kernel. The results are both affected
+by randomness when fitting the model and sigmoid kernel in general has
+better out of sample perfomance. 
+
+
 \subsection*{A few interesting facts and potential explanations}
 
 
@@ -401,12 +409,64 @@ need to flag half of the data point and more than 90\% of the flag are
 false alarm. The main idea here is that there is no sigle best criteria
 and the criteria selection should be based on the goal of analysis.
 
-\subsection*{SVM}
+In the tables below, I collected full out-of-sample results for logistic
+regression and forest fitted with 70\% of whole data set regarding confusion matrix. False alarm is defined as
+M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
+miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
 
-When fitting SVM model with the data, I used two kinds of kernels:
-rbf(Gaussion kernel) and sigmoid kernel. The results are both affected
-by randomness when fitting the model and sigmoid kernel in general has
-better out of sample perfomance. 
+\subsection*{Out-of-sample performance for logistic regression based on confusion matrix}
+
+\begin{table}[H]
+    \caption{
+    Logistic regression fitted with 70% of the whole period and
+    tested with 30% of whole period. Explanory variable is lag 2
+    credit change only. AUC is 0.73709.}
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+     threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+    0.9584492738912054 & 0.05263157894736842 & 0.875              & 0.018648018648018648 \\ \hline
+    0.9584156227543202 & 0.10526315789473684 & 0.8                & 0.023310023310023312 \\ \hline
+    0.9582944101957735 & 0.15789473684210525 & 0.8                & 0.03496503496503497  \\ \hline
+    0.9581720526209747 & 0.21052631578947367 & 0.84               & 0.05827505827505827  \\ \hline
+    0.9581434201492378 & 0.2631578947368421  & 0.8333333333333334 & 0.06993006993006994  \\ \hline
+    0.9580476223194564 & 0.3157894736842105  & 0.8604651162790697 & 0.10023310023310024  \\ \hline
+    0.9580060539159138 & 0.3684210526315789  & 0.86               & 0.11655011655011654  \\ \hline
+    0.9579924986498776 & 0.42105263157894735 & 0.8518518518518519 & 0.1258741258741259   \\ \hline
+    0.9579584325457295 & 0.47368421052631576 & 0.8571428571428571 & 0.14685314685314685  \\ \hline
+    0.9579263005580301 & 0.5263157894736842  & 0.8717948717948718 & 0.18181818181818182  \\ \hline
+    0.9579072932281031 & 0.5789473684210527  & 0.8817204301075269 & 0.21678321678321677  \\ \hline
+    0.9578986698802621 & 0.631578947368421   & 0.8811881188118812 & 0.23543123543123542  \\ \hline
+    0.9578854148873172 & 0.6842105263157895  & 0.8828828828828829 & 0.25874125874125875  \\ \hline
+    0.9578553847205481 & 0.7368421052631579  & 0.8931297709923665 & 0.30536130536130535  \\ \hline
+    0.9577269139408369 & 0.7894736842105263  & 0.9282296650717703 & 0.48717948717948717  \\ \hline
+    0.9576669020322022 & 0.8421052631578947  & 0.937007874015748  & 0.5920745920745921   \\ \hline
+    0.95763518803743   & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
+    0.9575910472738063 & 0.9473684210526315  & 0.940983606557377  & 0.710955710955711    \\ \hline
+    0.9574512307806254 & 1.0                 & 0.95               & 0.8857808857808858   \\ \hline
+    \end{tabular}
+\end{table}
+
+
+\subsection*{Out-of-sample performance for forest based on confusion matrix}
+
+\begin{table}[H]
+    \caption{Forest fitted with 70\% of the whole period and tested on
+    30\% of the whole period. Variable is lag 2 credit change only,
+    max depth is 3. The AUC of this model is 0.67079.}
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+     threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+    0.31087996870780027  & 0.05263157894736842 & 0.0                & 0.002331002331002331 \\ \hline
+    0.15586808878177918  & 0.10526315789473684 & 0.5                & 0.009324009324009324 \\ \hline
+    0.0538083675328781   & 0.15789473684210525 & 0.9090909090909091 & 0.07692307692307693  \\ \hline
+    0.047849724485387976 & 0.3684210526315789  & 0.8939393939393939 & 0.15384615384615385  \\ \hline
+    0.04160062144965254  & 0.7368421052631579  & 0.9366515837104072 & 0.5151515151515151   \\ \hline
+    0.03808155845225508  & 0.8421052631578947  & 0.9382239382239382 & 0.6037296037296037   \\ \hline
+    0.03176986812156413  & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
+    0.010696363086234579 & 0.9473684210526315  & 0.95               & 0.8391608391608392   \\ \hline
+    0.00829026056619624  & 1.0                 & 0.9557109557109557 & 1.0                  \\ \hline
+    \end{tabular}
+\end{table}
 
 \subsection*{Conclusion and potential further questions to answer}
 
@@ -476,65 +536,6 @@ Figure 10: The maxmum feature is unlimited and bootstrap is off, and we
 can see dramatical reduce of fluctuation and only two lines do not
 approach 0.5 benchmark.
 \end{quote}
-
-In the tables below, I collected full out-of-sample results for logistic
-regression and forest fitted with 70\% of whole data set regarding confusion matrix. False alarm is defined as
-M01 / (M01 + M11), and can be interpreted as when model say crisis, how much of that are
-miss classified. Total flag is the percentage of total observation that has been flagged by the model as crisis.
-
-\subsection*{Out-of-sample performance for logistic regression based on confusion matrix}
-
-\begin{table}[H]
-    \caption{
-    Logistic regression fitted with 70% of the whole period and
-    tested with 30% of whole period. Explanory variable is lag 2
-    credit change only. AUC is 0.73709.}
-    \begin{tabular}{|l|l|l|l|}
-    \hline
-     threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
-    0.9584492738912054 & 0.05263157894736842 & 0.875              & 0.018648018648018648 \\ \hline
-    0.9584156227543202 & 0.10526315789473684 & 0.8                & 0.023310023310023312 \\ \hline
-    0.9582944101957735 & 0.15789473684210525 & 0.8                & 0.03496503496503497  \\ \hline
-    0.9581720526209747 & 0.21052631578947367 & 0.84               & 0.05827505827505827  \\ \hline
-    0.9581434201492378 & 0.2631578947368421  & 0.8333333333333334 & 0.06993006993006994  \\ \hline
-    0.9580476223194564 & 0.3157894736842105  & 0.8604651162790697 & 0.10023310023310024  \\ \hline
-    0.9580060539159138 & 0.3684210526315789  & 0.86               & 0.11655011655011654  \\ \hline
-    0.9579924986498776 & 0.42105263157894735 & 0.8518518518518519 & 0.1258741258741259   \\ \hline
-    0.9579584325457295 & 0.47368421052631576 & 0.8571428571428571 & 0.14685314685314685  \\ \hline
-    0.9579263005580301 & 0.5263157894736842  & 0.8717948717948718 & 0.18181818181818182  \\ \hline
-    0.9579072932281031 & 0.5789473684210527  & 0.8817204301075269 & 0.21678321678321677  \\ \hline
-    0.9578986698802621 & 0.631578947368421   & 0.8811881188118812 & 0.23543123543123542  \\ \hline
-    0.9578854148873172 & 0.6842105263157895  & 0.8828828828828829 & 0.25874125874125875  \\ \hline
-    0.9578553847205481 & 0.7368421052631579  & 0.8931297709923665 & 0.30536130536130535  \\ \hline
-    0.9577269139408369 & 0.7894736842105263  & 0.9282296650717703 & 0.48717948717948717  \\ \hline
-    0.9576669020322022 & 0.8421052631578947  & 0.937007874015748  & 0.5920745920745921   \\ \hline
-    0.95763518803743   & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
-    0.9575910472738063 & 0.9473684210526315  & 0.940983606557377  & 0.710955710955711    \\ \hline
-    0.9574512307806254 & 1.0                 & 0.95               & 0.8857808857808858   \\ \hline
-    \end{tabular}
-\end{table}
-
-
-\subsection*{Out-of-sample performance for forest based on confusion matrix}
-
-\begin{table}[H]
-    \caption{Forest fitted with 70\% of the whole period and tested on
-    30\% of the whole period. Variable is lag 2 credit change only,
-    max depth is 3. The AUC of this model is 0.67079.}
-    \begin{tabular}{|l|l|l|l|}
-    \hline
-     threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
-    0.31087996870780027  & 0.05263157894736842 & 0.0                & 0.002331002331002331 \\ \hline
-    0.15586808878177918  & 0.10526315789473684 & 0.5                & 0.009324009324009324 \\ \hline
-    0.0538083675328781   & 0.15789473684210525 & 0.9090909090909091 & 0.07692307692307693  \\ \hline
-    0.047849724485387976 & 0.3684210526315789  & 0.8939393939393939 & 0.15384615384615385  \\ \hline
-    0.04160062144965254  & 0.7368421052631579  & 0.9366515837104072 & 0.5151515151515151   \\ \hline
-    0.03808155845225508  & 0.8421052631578947  & 0.9382239382239382 & 0.6037296037296037   \\ \hline
-    0.03176986812156413  & 0.8947368421052632  & 0.9388489208633094 & 0.6480186480186481   \\ \hline
-    0.010696363086234579 & 0.9473684210526315  & 0.95               & 0.8391608391608392   \\ \hline
-    0.00829026056619624  & 1.0                 & 0.9557109557109557 & 1.0                  \\ \hline
-    \end{tabular}
-\end{table}
 
 
 \end{document}
