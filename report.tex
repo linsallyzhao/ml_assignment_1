@@ -83,23 +83,23 @@ table 1 in the paper.
 \subsection*{Annual summary statistics pre- and post-war}
 
 \begin{table}[H]
-    \begin{tabular}{|l|l|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|l|l|}
     \hline
           & credit\_to\_GDP & bankAsset\_to\_GDP & money\_to\_GDP & credit\_to\_money & bank\_asset\_to\_money \\ \hline
     count & 685             & 611                & 736            & 662               & 580                    \\ \hline
     mean  & 0.408977        & 0.714051           & 0.533292       & 0.735337          & 1.282481               \\ \hline
     std   & 0.359888        & 0.447337           & 0.207534       & 0.449343          & 0.566104               \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 \begin{table}[H]
-    \begin{tabular}{|l|l|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|l|l|}
     \hline
           & credit\_to\_GDP & bankAsset\_to\_GDP & money\_to\_GDP & credit\_to\_money & bank\_asset\_to\_money \\ \hline
     count & 831             & 828                & 834            & 833               & 831                    \\ \hline
     mean  & 0.546975        & 1.013497           & 0.645801       & 0.838012          & 1.575839               \\ \hline
     std   & 0.423878        & 0.668770           & 0.240497       & 0.494226          & 0.752540               \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 More than half of the countries in the dataset are from
@@ -143,12 +143,12 @@ main sourece of information.
     \caption{in-sample logistic regression trained with wholde time period,
     pre-war period and post war period with lag 2 credit change as major
     explanatory variable.}
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.6373277827336704 & 0.6286424526999033 & 0.697533908754624  \\ \hline
     with credit size    & 0.4518906730102092 & 0.5177922018137459 & 0.7200369913686806 \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 I did a out-of-sample test for the choice of variable using
@@ -164,12 +164,12 @@ power to the model. The AUC are reported in the following tables.
     \caption{out-of-sample logistic regression trained with 70\% of
     each data set and tested on 30\% of data with lag 1 to lag 5
     credit change as major explanatory variable.}
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.5861360718870345 & 0.5762987012987013 & 0.7608543417366948 \\ \hline
     with credit size    & 0.5892169448010269 & 0.5800865800865801 & 0.615546218487395  \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 
@@ -181,12 +181,12 @@ power to the model. The AUC are reported in the following tables.
     each data set and tested on 30% of data with lag 2 credit change
     as major explanatory variable.
     }
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.7370988446726572 & 0.7976190476190476 & 0.7461484593837535 \\ \hline
     with credit size    & 0.531193838254172  & 0.6737012987012987 & 0.6355042016806722 \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 \ciapdf{Figure_4.pdf}
@@ -212,7 +212,7 @@ there might be only one class in the whole training set or test set.
 \subsection*{Tree and forest}
 
 Next I fitted the data with a classification tree. With maxmum depth
-equals to 3, here are result of in-sampel prediction. It is obvious from
+equals to 3, here are result of in-sample prediction. It is obvious from
 the table that credit size add on predicting power for classification
 tree at least for in-sample test.
 
@@ -220,15 +220,15 @@ tree at least for in-sample test.
 
 \begin{table}[H]
     \caption{
-    in-sampel classification tree fitted with lag 2 credit change
+    in-sample classification tree fitted with lag 2 credit change
     as major explanatory variables
     }
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.6937568143522649 & 0.7030106338903466 & 0.780209617755857  \\ \hline
     with credit size    & 0.7598684210526315 & 0.7878746029553929 & 0.8358199753390876 \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 From the AUC plot we can see that there are much less point on each line
@@ -282,14 +282,14 @@ overfitting.
 
 
 \begin{table}[H]
-    \caption{in-sampel classification forest fitted with lag 2 credit change
+    \caption{in-sample classification forest fitted with lag 2 credit change
     as major explanatory variable.}
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
                         & whole set          & pre-war            & post-war           \\ \hline
     without credit size & 0.7419033105362275 & 0.7823735211526954 & 0.9169852034525278 \\ \hline
     with credit size    & 0.7619994548518189 & 0.8678359342632234 & 0.8669852034525277 \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 
 \ciapdf{Figure_7.pdf}
@@ -331,7 +331,7 @@ fitting precesure. Second, for the
 model fitted with both lag 2 credit change and credit size, the average
 AUC show fluctuation in the over fitting tail. In the plot of forest,
 all model show fluctuation in the over fitting tail parts but for models
-with two explainory variables, the fluctuations have higher amplitude.
+with two explanatory variables, the fluctuations have higher amplitude.
 Last, for some trees and forests, the out
 of sample AUC do not drop to 0.5 even in the obviously over fitting
 zone.
@@ -363,7 +363,7 @@ changes indicates that the
 forest fitting is extremely sensitive to the chang of training dataset.
 Another interesting observation here is that the AUC of model fitted
 with pre-war data and with both credit change and credit size as
-explainory variables dropped below 0.5 benchmark after the limit and
+explanatory variables dropped below 0.5 benchmark after the limit and
 bootstrap was turn off. I cannot explain this change. Relavent plots are in the appendix.
 
 I notice that the model that has
@@ -408,9 +408,9 @@ and the criteria selection should be based on the goal of analysis.
 \begin{table}[H]
         \caption{Out-of-sample performance for logistic regression based on confusion matrix.
         Logistic regression fitted with 70\% of the whole period and
-        tested with 30\% of whole period. Explanory variable is lag 2
+        tested with 30\% of whole period. Explanatory variable is lag 2
         credit change only. AUC is 0.73709.}
-        \begin{tabular}{|l|l|l|l|}
+        \begin{center}\begin{tabular}{|l|l|l|l|}
         \hline
          threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
         0.95845 & 0.05263 & 0.87500              & 0.01865 \\ \hline
@@ -432,7 +432,7 @@ and the criteria selection should be based on the goal of analysis.
         0.95764   & 0.89474  & 0.93885 & 0.64802   \\ \hline
         0.95759 & 0.94737  & 0.94098  & 0.71096    \\ \hline
         0.95745 & 1.00000                 & 0.95000               & 0.88578   \\ \hline
-        \end{tabular}
+        \end{tabular}\end{center}
 \end{table}
 
 \begin{table}[H]
@@ -440,7 +440,7 @@ and the criteria selection should be based on the goal of analysis.
         30\% of the whole period. Variable is lag 2 credit change only,
         max depth is 3. The AUC of this model is 0.67079.}
 
-    \begin{tabular}{|l|l|l|l|}
+    \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
      threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
     0.31088  & 0.05263 & 0.00000                & 0.00233 \\ \hline
@@ -452,7 +452,7 @@ and the criteria selection should be based on the goal of analysis.
     0.03177  & 0.89474  & 0.93885 & 0.64802   \\ \hline
     0.01070 & 0.94737  & 0.95000               & 0.83916   \\ \hline
     0.00829  & 1.00000                 & 0.95571 & 1.00000                  \\ \hline
-    \end{tabular}
+    \end{tabular}\end{center}
 \end{table}
 \end{multicols}
 
