@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,a3paper]{geometry}
 \usepackage{pgfplots}
 \usepackage{parskip}
 \usepackage{caption}
@@ -13,7 +13,7 @@
 \pgfplotsset{compat=1.15}
 
 \newcommand{\cia}[1]{\resizebox{\textwidth}{!}{\input{#1}}}
-\newcommand{\ciapdf}[1]{\resizebox{\textwidth}{!}{\includegraphics{#1}}}
+\newcommand{\ciapdf}[1]{\vspace*{-\parskip}\resizebox{0.9\textwidth}{!}{\includegraphics[width=0.9\textwidth]{#1}}}
 \newcommand{\halfhalf}[2]{\begin{multicols}{2}\includegraphics[width=0.5\textwidth]{#1} \includegraphics[width=0.5\textwidth]{#2}\end{multicols}}
 
 \begin{document}
@@ -71,8 +71,6 @@ the too can be found in this period.
 \ciapdf{Figure_1.pdf}
 
 \ciapdf{Figure_2.pdf}
-
-\halfhalf{Figure_1.pdf}{Figure_2.pdf}
 
 To study financial crisis caused by the economy system, we need to
 exclude the crisis caused by the two world war. As did in Schularick and
