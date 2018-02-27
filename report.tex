@@ -33,7 +33,7 @@
 The dataset used for this task is from Schularick and Taylor (2012,
 ``Credit Booms Gone Bust''). It is an annual dataset covering 14
 countries and 140 years. Among the variables they collected, the most
-important one is the yearly aggregate bank loans, which is 
+important one is the yearly aggregate bank loans, which is
 the main soure of predictive power. The variable of interest is
 CrisisST which takes a value of 1 when there is a financial crisis and 0
 otherwise.
@@ -43,7 +43,7 @@ relationships between several macro variables within two
 eras of finance capitalism, tested the predictive power of different
 macro variables, and compared predictive power of different supervised
 learning methods. The last part of above is also inspired by the
-Fricke (2017, ``Financial Crisis Prediction: A Model Comparison''). 
+Fricke (2017, ``Financial Crisis Prediction: A Model Comparison'').
 
 The methods used are logistic regression, classification
 tree, classification forest, and SVM. The major criteria
@@ -139,7 +139,7 @@ for the post-war dataset. Since in the paper, lag 2 credit change is the only
 lagged variable that
 is significant, I also fitted logistic regression with only lag 2 data
 and the model fit slightly better for both the whole set and the pre-war period
-in respect of AUC. The change in the post-war period is ambiguous and 
+in respect of AUC. The change in the post-war period is ambiguous and
 credit size seems to add predictive power to the post-war period. The lag 2 credit
 change is indeed the
 main source of information.
@@ -327,124 +327,122 @@ change and credit size, while the post-war is fitted with lag 2 credit change
 only.
 \end{quote}
 
-With optimal max depth picked up by the same method as in the tree
+With optimal max depth picked up by the same method, as in the tree
 analysis, datasets are fitted with lag 2 credit change and/or credit
-size. Tested with 30\% data in the dataset, the AUC are 0.62426,
+size. Testing with 30\% data in the dataset, the AUCs are 0.62426,
 0.73593, and 0.71709 for whole, pre-war and post-war data.
 
-Tree and forest learners perform brilliantly in-sample and
-are not much more impresive than logistic regression in out-of-sample test. Due
-to the adventage of averaging multiple trees, and reduce overfitting and
+Tree and forest learners perform brilliantly in-sample, but
+are not much more impressive than logistic regression in out-of-sample tests. Due
+to the advantage of averaging multiple trees, and reducing overfitting and
 variance, forest
-performs slightly better than tree method.
+performs slightly better than the tree method.
 
 In both tree and forest analysis, I used gini index and entropy and
-there are little difference between the AUC.
+there is little difference between the AUC.
 
 \subsubsection*{SVM}
 
-When fitting SVM model with the data, I used two kinds of kernels:
-rbf (Gaussion kernel) and sigmoid kernel. The results are both affected
-by randomness when fitting the model and sigmoid kernel in general has
-better out of sample perfomance. 
+When fitting an SVM model with the data, I used two kinds of kernels: rbf
+(Gaussian kernel) and sigmoid kernel. The results are both affected by
+randomness when fitting the model, but neverthelesss the sigmoid kernel in
+general has better out-of-sample perfomance.
 
 
-\subsection*{A few interesting facts and potential explanations}
+\subsection*{A few interesting observations and potential explanations}
 
 
 When taking a closer look at the results of tree and forest, I found a
-few interesting facts. First, for both tree and forest, I found the
+few interesting observations of note. Firstly, for both tree and forest, I found the
 results are different when fitting models with exactly same data set and
-parameters, indecating randomness in the
-fitting precesure. Second, for the
+parameters, indicating randomness in the
+fitting process. Secondly, for the
 models fitted with both lag 2 credit change and credit size, the average
-AUC show fluctuation in the overfitting zone when plotted with maximum depth.
-In the plot of forest,
-all models show fluctuation in the overfitting parts but for models
+AUC showed fluctuation in the overfitting zone when plotted against maximum depth.
+In the forest plot,
+all models show fluctuation in the overfitting areas, but for models
 with two explanatory variables, the fluctuations have higher amplitudes.
-Last, for some trees and forests, the out
-of sample AUC do not drop to 0.5 even in the obviously overfitting
-zone.
+Lastly, for some trees and forests, the out-of-sample AUCs do not drop to 0.5
+even when obviously overfitting.
 
-To answer the first question, one need to identify the souce of
-randomness. I found two protential sources for tree and three for
-forest by reading the document. One obvious candidate is the random start point when searching
-for the optimal arguments to minimize cost function. However, as long as
-the problem is convex, the searching reslults should be with in a
-relatively small intervel with possible difference due to limited resolution. This
-doesn't match the observation. An argument
-called max\_features in tree is defined as``The number of features to consider when
-looking for the best split (sklearn.tree.DecisionTreeClassifier document
-page)''. When fitted with two variables, the model with max
-feature setted to 1 shows jumps while model with max features setted to 2 does not. For the forest, there is one extra
+To answer the first question, one first is required to identify the source of
+randomness. I found two potential sources for tree and three for
+forest by reading the documentation. One obvious candidate is the random start point when searching
+for the optimal arguments to minimize the cost function. However, as long as
+the problem is convex, the searching results should be within a
+relatively small interval with possible differences due to limited resolution. This
+doesn't match the observation. As documented as part of \texttt{sklearn.tree.DecisionTreeClassifier}, an argument
+called max\_features in tree is defined as ``{[}t{]}he number of features to consider when
+looking for the best split''. When fitted with two variables, the model with max
+feature set to 1 shows jumps while the model with max features set to 2 does not. For the forest, there is one extra
 source of randomness. To grow multiple trees, the sklearn library
-bootstrap observations using random selection with replacement. In both tree
-and forest functions from sklearn library, the argument random state controls all the
+bootstraps observations using random selection with replacement. In both tree
+and forest functions from the sklearn library, the argument random state controls all the
 randomness.
 
 Carrying knowledge mentioned above, I try to decompose the fluctuations.
 Fixing random state eliminates fluctuation in
-AUC-max depth plot of both treee and forests. For the forest, I first turn off the max
-feature limit, and the resulting plot doesn't show less fluctuation.
-Next, I add the limit on max feature and turn off bootstrap, and
-this reduced the fluctuation. And eventually, when I turn off both limit
+AUC-max depth plot of both tree and forests. For the forest, I first turned off the max
+feature limit, and the resulting plot didn't show less fluctuation.
+Next, I added the limit on max features and turned off bootstrap, and
+this reduced the fluctuation. Eventually, when I turned off both limit
 and bootstrap, the fluctuation was almost totally eliminated. These
 changes indicates that the
-forest fitting is extremely sensitive to the chang of training dataset.
-Another interesting observation here is that the AUC of model fitted
-with pre-war data and with both credit change and credit size as
-explanatory variables dropped below 0.5 benchmark after the limit and
-bootstrap was turn off. I cannot explain this change. Relavent plots are in the appendix.
+forest fitting is extremely sensitive to changes of training dataset.
+Another interesting observation here is that, once both bootstrap and the limit
+were turned off, the AUC of models fitted with pre-war data, and with both
+credit change and credit size as explanatory variables, dropped below a 0.5
+benchmark. I cannot explain this change, relevent plots are in the appendix.
 
-I notice that the model that has
+I noticed that models that have
 predictive power even when overfitted are models fitted with the whole
-dataset. This is ture for both tree and forest analysis (with
+dataset. This is true for both tree and forest analysis (with
 randomness turn off in forest). From the plot of AUC of trees fitted
 with different datasets, I notice that there is only one point in each
-of the three line. This indecates that in the out of sample test, only
-one split, presumably the first split take effect, most likely due to
-overfitting. The whole set has the largest number of observations, it is likely that
+of the three lines. This indicates that in the out-of-sample test, only
+one split --- presumably the first split --- takes effect, most likely due to
+overfitting. The whole set has the largest number of observations, so it is likely that
 even when overfitted, the first split still has some predictive power. Here
-is one exampel of AUC plot when overfitted. This also explains the same
+is one example of an AUC plot when overfitted. This also explains the same
 observation in the forest analysis.
 
 \ciapdf{Figure_11.pdf}
 \begin{quote}
 Figure 7: All three models are fitted with lag 2 credit change and
-credit size. These models are fitted with 80\% of dataset and
-tested on 20\% of set. To eliminate effect of randomness, the
-ramdom state argument was fixed when fit these models.
+credit size. These models are fitted with 80\% of the dataset and
+tested on 20\% of the dataset. To eliminate the effects of randomness, the
+ramdom state argument was fixed when these models were fit.
 \end{quote}
 
 \subsection*{Another criteria}
 
 Except for AUC, a few other values from confusion matrix can also be good
-criterias for model comparison. In the tables below, I collected some 
-out-of-sample results for logistic regression and forest fitted with 70\%
-of whole data set regarding confusion matrix. False alarm is defined as
-M01 / (M01 + M11), and can be interpreted as when model say crisis, how much
-of that are miss classified. Total flag is the percentage of total
-observation that has been flagged by the model as crisis.
+criteria for model comparison. In the tables below, I collected some
+out-of-sample results for logistic regression and forest fitted with 70\% of
+the whole data set regarding confusion matrix. A false alarm is defined as
+M01 / (M01 + M11), and can be interpreted as a measure of misclassification
+when the model predicts a crisis. Total flag is the percentage of total
+observations that have been flagged by the model as a crisis.
 
 To capture 10\% of the crisis,
-logistic regression need to flag 2\% of the total observation, and 80\%
-of those flags are false alarm. On the other hand, forest need only flag
-less than 1\% of data and only half of those are false alarm. However,
+logistic regression needs to flag 2\% of the total observations, and 80\%
+of those flags are false alarms. On the other hand, forest only needs to flag
+less than 1\% of the data to achieve this, and only half of those are false alarms. However,
 if the goal is to capture half of the crisis, logistic regression only
-need to flag less than 20\% of data with 87\% false alarm while forest
-need to flag half of the data point and more than 90\% of the flag are
-false alarm. The main idea here is that there is no sigle best criteria
+needs to flag less than 20\% of data with 87\% false alarm while forest
+needs to flag half of the data points and more than 90\% of the flags are
+false alarms. The main idea here is that there is no single best criteria,
 and the criteria selection should be based on the goal of analysis.
 
 \begin{multicols}{2}
 \begin{table}[H]
         \caption{Out-of-sample performance for logistic regression based on confusion matrix.
         Logistic regression fitted with 70\% of the whole period and
-        tested with 30\% of whole period. Explanatory variable is lag 2
+        tested with 30\%. Explanatory variable is lag 2
         credit change only. AUC is 0.73709.}
         \begin{center}\begin{tabular}{|l|l|l|l|}
         \hline
-         threshold         & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+         threshold         & sensitivity        & falseAlarm         & totalFlag            \\ \hline
         0.95845 & 0.05263 & 0.87500              & 0.01865 \\ \hline
         0.95842 & 0.10526 & 0.80000                & 0.02331 \\ \hline
         0.95829 & 0.15789 & 0.80000                & 0.03497  \\ \hline
@@ -469,12 +467,12 @@ and the criteria selection should be based on the goal of analysis.
 
 \begin{table}[H]
         \caption{Out-of-sample performance for forest based on confusion matrix. Forest fitted with 70\% of the whole period and tested on
-        30\% of the whole period. Variable is lag 2 credit change only,
+        30\%. Variable is lag 2 credit change only,
         max depth is 3. The AUC of this model is 0.67079.}
 
     \begin{center}\begin{tabular}{|l|l|l|l|}
     \hline
-     threshold           & sensitiveity        & falseAlarm         & totalFlag            \\ \hline
+     threshold           & sensitivity        & falseAlarm         & totalFlag            \\ \hline
     0.31088  & 0.05263 & 0.00000                & 0.00233 \\ \hline
     0.15587  & 0.10526 & 0.50000                & 0.00932 \\ \hline
     0.05381   & 0.15789 & 0.90909 & 0.07692  \\ \hline
@@ -491,42 +489,42 @@ and the criteria selection should be based on the goal of analysis.
 \subsection*{Conclusion and potential further questions to answer}
 
 In this study, I implemented
-a few supervised learning models on the data. The major predicting
-power lies in lag 2 credit change and this conclusion alines with
-Schularick and Taylor paper. Predictive power of models are much stronger in sample. This confirms the result of Fricke
+a few supervised learning models and used them on the data. The major predictive
+power lies in lag 2 credit change, and this conclusion aligns with the
+Schularick and Taylor paper. The predictive power of models is much stronger in-sample. This confirms the result of the Fricke
 paper. Tree and forest are particularly
-vulnarable to overfitting thus require carefully picked parameters like
+vulnerable to overfitting, and thus require carefully picked parameters like
 maximum depth or maximum number of leaves. They are also quite sensitive
-to the change of training set. Another issue for
+to changing training set. Another issue for
 tree and forest is that when there is a dominating class in the training
-data, the model generated could be biasd. This issue can be reduced by
-balance the data prior fitting or assign similar weight to different
+data, the model generated could be biased. This issue can be mitigated by
+balancing the data prior to fitting, or by assigning similar weights to different
 classes. However, these are not explored in this report and can be
-interesting topic for futher study. Since forest shows great protential
+interesting topic for futher study. Since forest shows great potential
 to predict crisis, and machine learning methods are not widly use in
 economic research, solving this issue could have practical meaning. All
 the models tested in this report show some level of predictive power.
 However, there is no single standard to judge which is the best model.
-The selecting criteria strongly depends on the purpose of the analysis
-and different models may have adventages in different tasks.
+The selection criteria strongly depends on the purpose of the analysis
+and different models may have advantages in different tasks.
 
 \begin{thebibliography}{9}
-\bibitem{booms} 
+\bibitem{booms}
 Moritz Schularick \& Alan M. Taylor
 \textit{Credit Booms Gone Bust: Monetary Policy, Leverage Cycles, and Financial Crisis, 1870-2008}.
 
-\bibitem{fcp} 
+\bibitem{fcp}
 Daniel Fricke
 \textit{Financial Crisis Prediction: A Model Comparison}.
 \end{thebibliography}
 
 \section*{Appendix}
 
-Figure 8: nomal depth tree
+Figure 8: normal depth tree
 
 \ciapdf{app_normaldepth.pdf}
 
-Figure 9: overfitting tree 
+Figure 9: overfitting tree
 
 \vspace*{-\parskip}\resizebox{\textwidth}{!}{\includegraphics{app_overfitting.pdf}}
 
@@ -542,7 +540,7 @@ there is a tie in the cost function values.
 \begin{quote}
 Figure 11: The maximum feature is limited and bootstrap is on, this is
 exactly the same plot used to choose optimal depth. We can see a lot of
-fluctuation here and at least three AUC do not approach 0.5 benchmark.
+fluctuation here and at least three AUCs do not approach the 0.5 benchmark.
 \end{quote}
 
 \ciapdf{Figure_9.pdf}
@@ -554,46 +552,46 @@ see that fluctuation is reduced.
 \ciapdf{Figure_10.pdf}
 \begin{quote}
 Figure 13: The maximum feature is unlimited and bootstrap is off, and we
-can see dramatical reduce of fluctuation and only two lines do not
-approach 0.5 benchmark.
+can see dramatic reduction of fluctuation and only two lines do not
+approach the 0.5 benchmark.
 \end{quote}
 
 \section*{Task 2}
 
 \subsection*{Introduction}
 
-Markovitz pertfolio theory has always be a classic. However it is known that
-the optimal portfolio is not stable bringing issue on frequently rebalancing
+Markovitz portfolio theory has always been a classic. However it is known that
+the optimal portfolio is not stable, bringing the issue on frequently rebalancing
 for investors. Following the lead of Fastrich, Paterlini, and Winker (Constructing
 optimal sparse portfolios using regularization methods, 2014), this study
-try to find global minimum variance portfolio under regularizations thus stablize
-the portfolio choice and reducing the rebalancing problem.
+attempts to find a global minimum variance portfolio under regularizations,
+thus stablizing the portfolio choice, and reducing the rebalancing problem.
 
-The regularizations used in this study are Lasso and Ridge. Resulting global
-minimum variance portfolios has lower variance than Markovitz portfolios and
-therefore confirmed the results from paper montioned above.
+The regularizations used in this study are Lasso and Ridge. The resulting global
+minimum variance portfolios have lower variance than Markovitz portfolios, and
+therefore confirm the results from the above paper.
 
 \subsection*{Data description and cleaning}
 
-The data used is French 48 industry portfolios daily data. After comparing variance
-of each industry and of the whole dataset, I choose to use equal weighted data
-since it has higher variance and hopefully the different among regularizations
-will be more obvious. After deleting any row that contains missing value, I have
-about 44 years data left which is a good amount.
+The data used is French 48 industry portfolios daily data. After comparing the variance
+of each industry and across the whole dataset, I chose to use equally weighted data
+since it has higher variance, and presumably the difference among regularizations
+will be more obvious. After deleting any row that contains missing values, I have
+about 44 years' worth of data left, which is a substantial amount.
 
-In figure 1, I plotted standard diviation of all 48 industies and we can see that
-except for a few outliars, most industries standard diviation of returns lies
+In figure 1, I plotted the standard deviation of all 48 industies and we can see that ---
+except for a few outliers --- most industries standard deviation of returns lies
 in a interval between 0.75 to 1.5.
 
 \ciapdf{Figure_1T2.pdf}
 
 \begin{quote}
-Figure 1: std of 48 industires show that except for a few, all industries has
-std with a steady interval
+Figure 1: stddev of 48 industires shows that, the vast majority of industries
+have stddev with a steady interval
 \end{quote}
 
-Next I plottd mean returns for each of 48 industies together with minimum and maximum
-returns of each industry. The maximum returns seem to has more fluctuation than
+Next I plotted mean returns for each of the 48 industries together with the minimum and maximum
+returns of each industry. The maximum returns seem to have more fluctuation than
 the minimum.
 
 \ciapdf{Figure_2T2.pdf}
@@ -602,7 +600,7 @@ the minimum.
 Figure 2: mean, minimum and maximum returns of each industry
 \end{quote}
 
-The industry that has highest variance is the coal and utililies has the lowest
+The industry that has highest variance is coal, whereas utililies has the lowest
 variance. Here is a plot to demonstrate that.
 
 \ciapdf{Figure_3T2.pdf}
@@ -611,27 +609,27 @@ variance. Here is a plot to demonstrate that.
 Figure 3: Variances of coal industry and utility industry.
 \end{quote}
 
-\subsection*{Global minimus variance portfolio with different regulariztions}
+\subsection*{Global minimum variance portfolio with different regularizations}
 
 \subsubsection*{Three methods to select portfolios}
 
 In this study, I used three methods for selecting minimum variance portfolios.
-The frist one is Markovitz portfolio selection. This is a problem minimize variance
+The first one is Markovitz portfolio selection. The problem here is to minimize variance
 of the portfolio under the constraint that sum of all the weights equals to 1.
 I also performed selection for long-only portfolios to use together with long-short
-portfolio as benchmarks. To find the long-only portfolios, the minimize problem
-need a extra constraint that all the weights greater or equal to 0. The second
-method I used is a Markovitz under Lasso regularization. This is a minimizing
-problem that minimizing sum of variance and a 1-norm penalty:
+portfolio as benchmarks. To find the long-only portfolios, the minimization problem
+needs a extra constraint that all the weights must be greater or equal than 0. The second
+method I used was Markovitz under Lasso regularization. This is a minimizing
+problem, minimizing the sum of variance and a 1-norm penalty:
 
 \begin{equation*}
 \mathbf{w^T\sum w} + \lambda \sum_{n= 1}^{K}\left | w_n \right |,
 \end{equation*}
 
 where \textbf{w} is weight vector, $\mathbf{\Sigma}$ is the covariance matrix
-and K is the number of stocks in your investing universe. Parameter $\lambda$
-controls how much penalty to add. To find a portfolio, one need to
-solve this minimizing problem under the same constrain that sum of weights equals
+and K is the number of stocks in the investing universe. Parameter $\lambda$
+controls how much penalty to add. To find a portfolio, one needs to
+solve this minimizing problem under the same constraint that the sum of weights equals
 to one. The other method in this report is a Markovitz under Ridge regularization.
 In this minimizing problem, the target function is a sum of variance and 2-norm
 penalty:
@@ -640,29 +638,31 @@ penalty:
 \mathbf{w^T\sum w} + \lambda \sum_{n= 1}^{K}\left | w_n \right |^2,
 \end{equation*}
 
-and solving this under same budget constraint give a minimum variance portfolio
-under Ridge regularization.
+and solving this under the same budget constraints give a minimum variance
+portfolio under Ridge regularization.
 
 \subsubsection*{Selection $\lambda$ with cross validation}
 
-If $\lambda$ equals to 0, both regularized method collaps to classic Markovitz.
+If $\lambda$ equals to 0, both regularized method collapse to classic Markovitz.
 On the other hand, if $\lambda$ is too large, which means the penalty term in
-the target function will dominate the variance term and thus impose to much bias.
-To select optimal $\lambda$, I performed a cross validation as did in the Fastrich
+the target function will dominate the variance term, it thus imposes too much bias.
+To select an optimal $\lambda$, I performed a cross validation as in the Fastrich
 paper. This cross validation is only meaningful under stationary assumption.
 First, I shuffle the whole training set and divide it into 10 equal folds.
-In each round, I take one of these 10 folds as test set and the rest 9 folds as
-training set. Then, in each round, for each value in a series of $\lambda$
+In each round, I take one of these 10 folds as the test set and the other 9 folds as
+the training set. Then, in each round, for each value in a series of $\lambda$
 that I want to test,
-solve the minimizing problem under relative constraint and thus find a portfolio.
-Hold this portfolio in the test set and recieve a return series. Calculate the
-standard diviation of this return series since our aim is to find minimum
-variance portfolio. After 10 round, one will have 10 standard diviation for each
-$\lambda$, and taking mean of these gives the score of that $\lambda$. The
-optimal $\lambda$ is the one with the lowest score. And a good searching
-interval should give a smile shape curve when plot all the score against $\lambda$.
-If the optimal $\lambda$ is on the edge of searching interval, a change of interval
-is required to find a true minimum score. In the next to figure, I plotted
+I solve the minimizing problem under relative constraints and thus find a
+portfolio, hold this portfolio in the test set, and recieve a series of
+returns. I then calculate the
+standard deviation of this return series since our aim is to find a minimum
+variance portfolio. After 10 rounds, one will have 10 standard deviations for each
+$\lambda$, and taking the mean of these gives one the score of that $\lambda$. The
+optimal $\lambda$ is the one with the lowest score, and a good searching
+interval should give a smile shape curve when plotting all the scores against
+the $\lambda$.
+If the optimal $\lambda$ is on the edge of the searching interval, a change of interval
+is required to find a true minimum score. In the next two figures, I plotted
 scores against $\lambda$ for a Lasso penalty and a Ridge penalty.
 
 
@@ -682,18 +682,18 @@ Figure 5: portfolio std with Ridge regularizaton. Training period 1 year. Search
 interval $10^{-2}$ to $10^{-1.3}$ and searching steps 100.
 \end{quote}
 
-Since there is randomness involved in the shuffling step, to find the reasonable
-searching interval, I run cross validaton for both regularizatons multiple times
-to make sure all the optimal values are with in the interval. When using on
-the whold data set, if the optimal solution is on the edge, the program will
-through a warning, shift both boundaries of interval to the coresponding
-direction, and perform another search.
+Since there is randomness involved in the shuffling step, to find the most reasonable
+searching interval, I ran cross validation for both regularizatons multiple times
+to make sure that all of the optimal values are within the interval. When using on
+the whole data set, if the optimal solution is on the edge, the program will
+emit a warning, shift both boundaries of the interval to the coresponding
+direction, and will perform another search.
 
 \subsection*{Out-of-sample test}
 
-Out-of-sample tests are performed on the data with vary training windows and
-holding periods. In the plot below is return series trained on a one year
-window and hold for 3 months.
+Out-of-sample tests are performed on the data with various training windows and
+holding periods. In the plot below, return series was trained on a one year
+window and was held for 3 months.
 
 
 \ciapdf{Figure_6T2.pdf}
@@ -707,27 +707,28 @@ Searching steps: 100 for both.
 The variance of portfolios are 4.5392, 3.9004, 3.6182 and 3.3498 in percentage
 respectively
 for Markovitz long-short, Markovitz long-only, Lasso, and Ridge. As expected,
-portfolio found under regularizations have lower variance during the holding
-period. This is due to the barrier set by penalty term blocks the noise in the
-data, thus in the variance covariance matrix, to enter the results freely. A
-small surprise here is that with more constraint, the long-only portfoio
-has lower variance than the long-short portfolio. This is not consistant across
-all the back tests I performed, but it indicates the instability of Markovitz
-solution.
+portfolios found under regularizations have lower variance during the holding
+period. This result comes about as the barrier set by the penalty term blocks
+the noise in the input data (which is thus also in the variance covariance
+matrix) from entering the results freely. A small surprise here is that with
+more constraints, the long-only portfoio has lower variance than the long-short
+portfolio. This is not consistent across all the of backtests I performed, but it
+indicates the instability of Markovitz's solution.
 
-Next, I performed a series of out-of-sampel tests with moving windows. I tested
-different training window to see whether having longer training window affects
-any methods. I also test different holding periods to see whether some methods
+Next, I performed a series of out-of-sample tests with moving windows. I tested
+different training windows to see whether having a longer training window affects
+any methods. I also tested different holding periods to see whether some methods
 perform better when the selected portfolios were rebalanced more often. Since
-Fastrich paper only used 5 to 6 years of data, and considering runing time, I
-dicided to run these tests on the last 5 years from the whole data set.
+the Fastrich paper only used 5 to 6 years worth of data, and considering the
+running time, I
+decided to run these tests on the last 5 years from the whole data set.
 
 
 \subsubsection*{\centering{}Out-of-sample test result}
 
 \begin{table}[H]
-    \caption{Out-of-sample test with moving windows. Data use are the last 1250
-    observations of the data set}
+    \caption{Out-of-sample test with moving windows. The last 1250
+    observations of the data set are used}
     \begin{center}\begin{tabular}{|l|l|l|l|l|l|l|}
     \hline
     Training window (days) & Holding window (days) & window number & Marlovitz long-short & Markovitz long-only & Lasso & Ridge \\ \hline
@@ -740,51 +741,56 @@ dicided to run these tests on the last 5 years from the whole data set.
     \end{tabular}\end{center}
 \end{table}
 
-From the whole table, we can see that the result is robust to the change of
-training table and holding period. In all the tests cross various training period
-and holding length, the moving window out-of-sample tests denmonstrate that
-regularized portfolio constently out perform the Markovitz portfolio. Among
-two bench marks, long-only protfolio has higher variance because it cannot
-take adventage of shorting thus has less ability to diverge the risk. Between
-Lasso and Ridge, there is no clear result about which one provide portfolios
-with lower variance. The first three row of the table seems to indicate that
-shorter training period make the regularized portfolio out perform even more.
-This is not enough to evidence to conclude, but one potential reason could be
-that in a short training period, the true information in the covariance matrix
-is more mingled with noise and thus the Markovitz method has more difficulty
-to select real optimal portfolio. And because of the penalty term, regularized
-methods has a more restrict standard for only the significant information to
-pass through, thus allow them to out perform the Markovitz even more. For the
-changing of holding period, there is no clear result about whether a certain
-length of holding benifit a particular method.
+In this table, we can see that the result is robust to the change of
+training table and holding period. In all of the tests, across various training
+periods
+and holding lengths, the moving window out-of-sample tests demonstrate that
+regularized portfolios constently outperform the Markovitz portfolio. Among
+two benchmarks, long-only portfolio has higher variance because it cannot
+take advantage of shorting, and thus has less ability to diversify the risk. Between
+Lasso and Ridge, there is no clear result indicating which one provides portfolios
+with lower variance. The first three rows of the table seem to indicate that
+shorter training periods make the regularized portfolios outperform their
+competitors even more.
+This is not enough to evidence to form a conclusion, but one potential reason could be
+that in a short training period, the valid information in the covariance matrix
+is more muddled with noise and thus the Markovitz method has more difficulty
+to select real optimal portfolio. In addition, because of the penalty term, regularized
+methods have more restrictive standards which permit only significant information to
+pass through, thus allowing them to outperform Markovitz portfolios even more.
+When changing holding periods, there is no clear result about whether a certain
+length of holding benifits a particular method.
 
-At last, I performed a out-of-sample test on the whole 44 years data. Resulting
-variance are 2.1290, 3.5056, 2.0711, and 2.1074 for Markovitz long-short,
-Markovitz long-only, Lasso, and Ridge. As usual, portfolios under regulirizations
-out performed both benchmarks. The order of variances for the four portfolios
+Finally, I performed a out-of-sample test on the entire 44 years of data. The
+resulting variances were 2.1290, 3.5056, 2.0711, and 2.1074 for Markovitz long-short,
+Markovitz long-only, Lasso, and Ridge respectively. As usual, portfolios under
+regularizations
+outperformed both benchmarks. The order of variances for the four portfolios
 and magnitude of differences
-match the results of Fastrich, Paterlini and Winker paper.
+match the results of the Fastrich, Paterlini and Winker paper.
 
-Both Fastrich paper and Brodie paper mentioned sparseness as another feature as
-portfolio chosen by regularized Markovitz methods, however, set threshold at 0,
-neither set of portfolios selected under regularizations show this feature. I
-did not expore more from here but it might related to the solver used. Also,
+Both the Fastrich paper and Brodie paper mentioned sparseness as another
+feature of portfolios chosen by regularized Markovitz methods, however, with
+the threshold set at 0,
+neither set of portfolios selected under regularizations demonstrate this feature. I
+did not explore further from here, but it might be related to the solver used. Also,
 a position with weight less than $10^{-2}$ is practically non-active, so the
 sparse feature can also rely on the choice of threshold.
 
 \subsection*{Conclusion and potential further questions to answer}
 
-Observed global minimum variance portfolios found under different regularizations,
-I confirmed that regularized protfolios out perform both Markovitz benchmarks
-in the out-of-sample tests thus found optimal portfolios has lower variance in various
-the holdidng periods. Markovitz solutions are not stable and contains noice from the
+While observing the global minimum variance portfolios found under different regularizations,
+I confirmed that regularized portfolios outperform both Markovitz benchmarks
+in the out-of-sample tests, and as such found optimal portfolios have lower variance in various
+the holding periods. Markovitz solutions are not stable and contains noise from the
 data so regularization provides practical benefit to investors. Another benefit
-of regularizations proposed by both Fastrich paper and Brodie paper is it gives
-sparse portfolios thus reduce the transition cost. This is not observed here
-and can be a interesting further topic.
+of regularizations proposed by both the Fastrich paper and Brodie paper is that
+they give
+sparse portfolios, thus reducing the transition cost. This is not observed here
+and could, potentially, be a interesting further topic.
 
 \begin{thebibliography}{9}
-\bibitem{booms} 
+\bibitem{booms}
 B.Fastrich, S.Paterlini \& P.Winker (2014)
 \textit{Constructing optimal sparse portfolios using regularization methods}.
 
