@@ -184,8 +184,9 @@ solution.
 Next, I performed a series of out-of-sampel tests with moving windows. I tested
 different training window to see whether having longer training window affects
 any methods. I also test different holding periods to see whether some methods
-perform better when the selected portfolios were rebalanced more often. Here are
-some results of tests on the last 5 years from the whole data set.
+perform better when the selected portfolios were rebalanced more often. Since
+Fastrich paper only used 5 to 6 years of data, and considering runing time, I
+dicided to run these tests on the last 5 years from the whole data set.
 
 
 \subsubsection*{\centering{}Out-of-sample test result}
@@ -230,6 +231,13 @@ out performed both benchmarks. The order of variances for the four portfolios
 and magnitude of differences
 match the results of Fastrich, Paterlini and Winker paper.
 
+Both Fastrich paper and Brodie paper mentioned sparseness as another feature as
+portfolio chosen by regularized Markovitz methods, however, set threshold at 0,
+neither set of portfolios selected under regularizations show this feature. I
+did not expore more from here but it might related to the solver used. Also,
+a position with weight less than $10^{-2}$ is practically non-active, so the
+sparse feature can also rely on the choice of threshold.
+
 \subsection*{Conclusion and potential further questions to answer}
 
 Observed global minimum variance portfolios found under different regularizations,
@@ -238,8 +246,8 @@ in the out-of-sample tests thus found optimal portfolios has lower variance in v
 the holdidng periods. Markovitz solutions are not stable and contains noice from the
 data so regularization provides practical benefit to investors. Another benefit
 of regularizations proposed by both Fastrich paper and Brodie paper is it gives
-sparse portfolios thus reduce the transition cost. This is not explored here and
-can be a interesting further topic.
+sparse portfolios thus reduce the transition cost. This is not observed here
+and can be a interesting further topic.
 
 \begin{thebibliography}{9}
 \bibitem{booms} 
